@@ -7,13 +7,14 @@ package parcial03.formularios;
 import parcial03.Block;
 import parcial03.BlockChain; 
 //import parcial03.Cifrado; NO EXISTE ESTA CLASE
-//import parcial03.NodeData; NO EXISTE ESTA CLASE
+import parcial03.NodeData; 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
+
 
 /**
  *
@@ -22,9 +23,9 @@ import java.util.ArrayList;
 public class Server extends javax.swing.JFrame {
     
     private Thread tListener;
-//   private NodeData currentNode;
+   private NodeData currentNode;
 //   private ArrayList<NodeData> aOtherServer // este quiza no porque solo es un servidor
-//    private ArrayList<NodeData> aClients
+   private ArrayList<NodeData> aClients;
    private ArrayList<wallet> frmWallet;
 //    private ServerSocket SvrSocket;
     private BlockChain bc;
@@ -34,23 +35,31 @@ public class Server extends javax.swing.JFrame {
         initComponents();
     }
 
-    /*
     public Server(NodeData pnodeData){
     initComponents();
-    this.oCifrado = new Cifrado("ñVbFg-+*DsHgñ");
-    this.currentNode=pnodeData;
-    this.startServer();
-    
-    this.jLabel.setText(this.currentNode.getNodeName());
-    this.aClient=new ArrayList<>();
-    this.frmWallet=new ArrayList<>();
-    */
+//    this.oCifrado = new Cifrado("ñVbFg-+*DsHgñ");
+//    this.currentNode=pnodeData;
+//    this.startServer();
+//    
+//    this.jLabel.setText(this.currentNode.getNodeName()); creo que esto no
+//    this.aOtherServers=new ArrayList<>();
+//    this.aClient=new ArrayList<>();
+//    this.frmWallet=new ArrayList<>();  
+    }
+
 
     private void startServer(){
         //create blockchain
         this.bc=new BlockChain(3,"0","SHA256");//el metodo de blockchain nose si esta bien puesto
-        //this.bc.createGenesis();
-        
+        this.bc.createGenesis();
+
+        //inicializar listener
+        try{
+           InetAddress iAdress= InetAddress.getByName(this.currentNode.getIPAdress());
+//           InetSocketAddress sNetServer = new InetSocketAddress(iAddress,this.currentNode.get)
+        }
+        catch(Exception ee){}
+   
 
     }
     /**
@@ -63,16 +72,29 @@ public class Server extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        txt_nUsuario = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        txt_cantidad = new javax.swing.JTextField();
+        agregar_usuario = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setText("Historial");
+        jLabel1.setText("Nuevo usuario:");
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        jLabel2.setText("gatitos iniciales:");
+
+        txt_cantidad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_cantidadActionPerformed(evt);
+            }
+        });
+
+        agregar_usuario.setText("agregar");
+        agregar_usuario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                agregar_usuarioActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -82,24 +104,49 @@ public class Server extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(40, 40, 40)
-                        .addComponent(jLabel1))
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txt_nUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(69, 69, 69)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txt_cantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(25, 25, 25)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 601, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(37, Short.MAX_VALUE))
+                        .addGap(210, 210, 210)
+                        .addComponent(agregar_usuario, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(129, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(252, Short.MAX_VALUE)
-                .addComponent(jLabel1)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(37, 37, 37)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(txt_nUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2)
+                    .addComponent(txt_cantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(agregar_usuario, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(313, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void txt_cantidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_cantidadActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_cantidadActionPerformed
+
+    private void agregar_usuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_agregar_usuarioActionPerformed
+        // TODO add your handling code here:
+        /* 
+        este es el codigo para agregar servidores, preg si se usara
+        NodeData tNode=new NodeData ("SV","127.0.0.1","7000");
+        this.aServers.add(tNode);
+            ... clase nov 9 consenso min 1:01:58
+        */
+        
+    }//GEN-LAST:event_agregar_usuarioActionPerformed
 
     /**
      * @param args the command line arguments
@@ -137,8 +184,10 @@ public class Server extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton agregar_usuario;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JTextField txt_cantidad;
+    private javax.swing.JTextField txt_nUsuario;
     // End of variables declaration//GEN-END:variables
 }

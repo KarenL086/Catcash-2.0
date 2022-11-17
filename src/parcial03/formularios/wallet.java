@@ -37,11 +37,11 @@ public class wallet extends javax.swing.JFrame /*implements Runnable*/{
         jLabel5 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        lb_balance = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        btn_enviar = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
-        txt_usuario = new javax.swing.JTextField();
+        txt_recibe = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         jSpinner1 = new javax.swing.JSpinner();
 
@@ -85,7 +85,7 @@ public class wallet extends javax.swing.JFrame /*implements Runnable*/{
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel1.setText("Gatitos disponibles:");
 
-        jLabel2.setText("jLabel2");
+        lb_balance.setText("jLabel2");
 
         jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/parcial03/imagenes/gato(2).png"))); // NOI18N
 
@@ -97,7 +97,7 @@ public class wallet extends javax.swing.JFrame /*implements Runnable*/{
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 48, Short.MAX_VALUE)
+                .addComponent(lb_balance, javax.swing.GroupLayout.DEFAULT_SIZE, 48, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(29, 29, 29))
@@ -110,18 +110,18 @@ public class wallet extends javax.swing.JFrame /*implements Runnable*/{
                     .addComponent(jLabel8)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel2)))
+                        .addComponent(lb_balance)))
                 .addContainerGap(24, Short.MAX_VALUE))
         );
 
-        jButton1.setBackground(new java.awt.Color(117, 95, 50));
-        jButton1.setFont(new java.awt.Font("Meow Paw", 0, 14)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/parcial03/imagenes/gato(1).png"))); // NOI18N
-        jButton1.setText("Enviar gatitos!");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btn_enviar.setBackground(new java.awt.Color(117, 95, 50));
+        btn_enviar.setFont(new java.awt.Font("Meow Paw", 0, 14)); // NOI18N
+        btn_enviar.setForeground(new java.awt.Color(255, 255, 255));
+        btn_enviar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/parcial03/imagenes/gato(1).png"))); // NOI18N
+        btn_enviar.setText("Enviar gatitos!");
+        btn_enviar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btn_enviarActionPerformed(evt);
             }
         });
 
@@ -140,17 +140,17 @@ public class wallet extends javax.swing.JFrame /*implements Runnable*/{
                 .addGap(65, 65, 65))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(40, 40, 40)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(40, 40, 40)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(28, 28, 28)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btn_enviar, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(68, 68, 68)
-                        .addComponent(txt_usuario, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txt_recibe, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(118, 118, 118)
                         .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -167,13 +167,13 @@ public class wallet extends javax.swing.JFrame /*implements Runnable*/{
                 .addGap(38, 38, 38)
                 .addComponent(jLabel6)
                 .addGap(18, 18, 18)
-                .addComponent(txt_usuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txt_recibe, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(28, 28, 28)
                 .addComponent(jLabel7)
                 .addGap(18, 18, 18)
                 .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(29, 29, 29)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btn_enviar, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -182,9 +182,28 @@ public class wallet extends javax.swing.JFrame /*implements Runnable*/{
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btn_enviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_enviarActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+        
+        int iComplexity = 3;
+        String sSender;//falta
+        String sReceiver = this.txt_recibe.getText().trim().toUpperCase();
+        int dAmount= (Integer)jSpinner1.getValue();
+        
+        /*esto fue tomado del form hasging al dar en generar
+
+        Object algorithms[]=Security.getAlgorithms("MessageDigest").toArray(); 
+        this.bc = new BlockChain(iComplexity,"0","SHA-512/256");
+        this.bc.createGenesis();
+        bc.createBlock();
+        bc.getLastBlock().setTransaccion(sSender,dAmount,sReceiver), 
+        bc.mineBlock();
+        
+        int dBalance = this.getBalance(sClient);
+        this.lb_balance.setText(Int.toString(dBalance);
+        Clase 9 Nov-para ver historial de transacciones
+        */
+    }//GEN-LAST:event_btn_enviarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -222,9 +241,8 @@ public class wallet extends javax.swing.JFrame /*implements Runnable*/{
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btn_enviar;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -236,6 +254,7 @@ public class wallet extends javax.swing.JFrame /*implements Runnable*/{
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSpinner jSpinner1;
     private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextField txt_usuario;
+    private javax.swing.JLabel lb_balance;
+    private javax.swing.JTextField txt_recibe;
     // End of variables declaration//GEN-END:variables
 }

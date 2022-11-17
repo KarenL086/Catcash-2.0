@@ -66,6 +66,19 @@ public class BlockChain {
         return false;
     }
     
+    public boolean createGenesis()
+    {
+        if(this.size()<1)
+        {
+            Block tmpBlock= new
+            Block(0,"0000000000000000000000000000000000000000000000000000000000000000");
+            this.blockChain.add(tmpBlock);
+            this.mineBlock();
+            return true;
+        }
+        return false;
+    }   
+    
     public void createBlock()
     {
         String prevHash= this.blockChain.get(this.blockChain.size()-1).getHash();

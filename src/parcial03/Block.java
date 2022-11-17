@@ -45,7 +45,6 @@ public class Block implements Serializable{
         else return false;
     }
     
-    //Set transaccion debe cambiarse por las votaciones
     public void setTransaction(String pSender, double pAmount, String pReceiver)
     {
         this.aTransaccion.add(new Transaccion(
