@@ -6,13 +6,15 @@ package parcial03.formularios;
 
 import parcial03.Block;
 import parcial03.BlockChain; 
-//import parcial03.Cifrado; NO EXISTE ESTA CLASE
+import parcial03.Cifrado;
 import parcial03.NodeData; 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.ArrayList;
 
 
@@ -20,16 +22,16 @@ import java.util.ArrayList;
  *
  * @author Usuario
  */
-public class Server extends javax.swing.JFrame {
+public class Server extends javax.swing.JFrame implements Runnable{
     
     private Thread tListener;
    private NodeData currentNode;
-//   private ArrayList<NodeData> aOtherServer // este quiza no porque solo es un servidor
+   private ArrayList<NodeData> aOtherServer;
    private ArrayList<NodeData> aClients;
    private ArrayList<wallet> frmWallet;
-//    private ServerSocket SvrSocket;
+    private ServerSocket SvrSocket;
     private BlockChain bc;
-//    private Cifrado oCifrado;
+    private Cifrado oCifrado;
     
     public Server() {
         initComponents();
@@ -38,13 +40,13 @@ public class Server extends javax.swing.JFrame {
     public Server(NodeData pnodeData){
     initComponents();
 //    this.oCifrado = new Cifrado("ñVbFg-+*DsHgñ");
-//    this.currentNode=pnodeData;
-//    this.startServer();
-//    
+    this.currentNode=pnodeData;
+    this.startServer();
+    
 //    this.jLabel.setText(this.currentNode.getNodeName()); creo que esto no
 //    this.aOtherServers=new ArrayList<>();
-//    this.aClient=new ArrayList<>();
-//    this.frmWallet=new ArrayList<>();  
+    this.aClients=new ArrayList<>();
+    this.frmWallet=new ArrayList<>();  
     }
 
 
@@ -55,12 +57,43 @@ public class Server extends javax.swing.JFrame {
 
         //inicializar listener
         try{
-           InetAddress iAdress= InetAddress.getByName(this.currentNode.getIPAdress());
-//           InetSocketAddress sNetServer = new InetSocketAddress(iAddress,this.currentNode.get)
+            // creo que la IpAdress puede ponerse fijo al ser un solo servidor
+           InetAddress iAddress= InetAddress.getByName(this.currentNode.getIPAdress());
+//           InetSocketAddress sNetServer = new InetSocketAddress(iAddress,this.currentNode.getSocketNum());
+           InetSocketAddress sNetServer = new InetSocketAddress("127.0.0.1",7000);
+           SvrSocket = new ServerSocket();
+           SvrSocket.bind(sNetServer);
+           tListener=new Thread(this);
+           tListener.start();
+
         }
         catch(Exception ee){}
-   
-
+    }
+    
+    public void reportNewBalance(String receiver, int amount){
+        for(int i=0; i<this.aClients.size();i++){
+            if(this.aClients.get(i).getNodeName().equals(receiver)){
+                try{
+                    Socket socket=new Socket(this.aClients.get(i).getIPAdress(),
+                            this.aClients.get(i).getSocketNum());
+                    ObjectOutputStream oos= new ObjectOutputStream(socket.getOutputStream());
+                    oos.writeObject(amount);
+                    socket.close();
+                }
+                catch(Exception ee){}
+            }
+        }
+    }
+    
+    public void listBalances(){
+        String sCad="";
+        for(int i=0; i<this.aClients.size();i++){
+            sCad+= this.aClients.get(i).getNodeName() +
+                    "= $ "+
+                    Double.toString(this.bc.getBalance(this.aClients.get(i).getNodeName()))
+                    + "\n";
+        }
+        this.txtMessages.setText(sCad);
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -72,10 +105,14 @@ public class Server extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        txt_nUsuario = new javax.swing.JTextField();
+        txt_usuario = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         txt_cantidad = new javax.swing.JTextField();
         agregar_usuario = new javax.swing.JButton();
+        txtMessages = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -96,6 +133,14 @@ public class Server extends javax.swing.JFrame {
             }
         });
 
+        txtMessages.setText("jLabel3");
+
+        jLabel3.setText("Usuarios activos");
+
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jScrollPane1.setViewportView(jTextArea1);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -103,18 +148,28 @@ public class Server extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(210, 210, 210)
+                        .addComponent(agregar_usuario, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
                         .addGap(40, 40, 40)
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txt_nUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txt_usuario, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(69, 69, 69)
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txt_cantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(210, 210, 210)
-                        .addComponent(agregar_usuario, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(txt_cantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(129, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(66, 66, 66)
+                .addComponent(txtMessages, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(107, 107, 107))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(116, 116, 116))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -122,12 +177,21 @@ public class Server extends javax.swing.JFrame {
                 .addGap(37, 37, 37)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(txt_nUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_usuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2)
                     .addComponent(txt_cantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(agregar_usuario, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(313, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(36, 36, 36)
+                        .addComponent(txtMessages))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(45, 45, 45)
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(39, Short.MAX_VALUE))
         );
 
         pack();
@@ -187,7 +251,48 @@ public class Server extends javax.swing.JFrame {
     private javax.swing.JButton agregar_usuario;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JLabel txtMessages;
     private javax.swing.JTextField txt_cantidad;
-    private javax.swing.JTextField txt_nUsuario;
+    private javax.swing.JTextField txt_usuario;
     // End of variables declaration//GEN-END:variables
+
+    public void run(){
+        while(true){
+            try{
+                Socket socket = this.SvrSocket.accept();
+                
+                //Deserializacion
+                InputStream is = socket.getInputStream();
+                ObjectInputStream ois = new ObjectInputStream(is);
+                Block blk=(Block)ois.readObject();
+                socket.close();
+                
+                if(blk.getId()<0){
+                    String sSender =this.oCifrado.desencriptar(blk.getTransaction(0).getSender());
+                    String sReceiver =this.oCifrado.desencriptar(blk.getTransaction(0).getReceiver());
+                    int dAmount = blk.getTransaction(0).getAmount();
+                    
+                    Block tBlk = new Block();
+                    tBlk.setTransaction(sSender, dAmount, sReceiver);
+                    
+                    if(this.bc.getBalance(sSender)>=dAmount){
+                        this.bc.createBlock();
+                        this.bc.getLastBlock().setTransaction(tBlk.getTransaction(0));
+                        this.bc.mineBlock();
+                        //this.broadcastBlock(this.bc.getLastBlock()); difusion del bloque esto es para los otros servidores, ver si se puede omitir
+                        this.reportNewBalance(sReceiver, dAmount);
+                    }
+                    else this.txtMessages.setText("Insufficient funds from: "+sSender);
+                    }else{
+                    // cuando recibe bloques completos
+                    this.bc.addProvedBlock(blk);
+                }
+                this.listBalances();
+            }
+            catch(Exception ee){}
+        }
+    }
 }
