@@ -45,7 +45,7 @@ public class Block implements Serializable{
         else return false;
     }
     
-    public void setTransaction(String pSender, double pAmount, String pReceiver)
+    public void setTransaction(String pSender, int pAmount, String pReceiver)
     {
         this.aTransaccion.add(new Transaccion(
         this.aTransaccion.size(),pSender,pReceiver,pAmount));

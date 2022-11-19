@@ -4,20 +4,80 @@
  */
 package parcial03.formularios;
 
+import parcial03.Block;
+import parcial03.BlockChain; 
+import parcial03.Cifrado;
+import parcial03.NodeData; 
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.InputStream;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.ArrayList;
 /**
  *
  * @author Usuario
  */
-public class wallet extends javax.swing.JFrame /*implements Runnable*/{
+public class wallet extends javax.swing.JFrame implements Runnable{
 
     /**
      * Creates new form wallet
      */
-    //private NodeData nodeData;
+    private NodeData nodeData;
+    // private ArrayList<NodeData> sServers; cuando se usa mas de un server
+    private int dCurrentBalance;
+    private ServerSocket clientSocket;
+    private Thread tListener;
+    private Cifrado oCifrado;
     
     
     public wallet() {
         initComponents();
+        this.setResizable(false);
+        this.oCifrado = new Cifrado("ñVbFg-+*DsHgñ");
+    }
+    
+    public void configure(NodeData nodeClient, int pBalance){
+        this.nodeData = nodeClient;
+        this.dCurrentBalance = pBalance;
+//        this.jLabel5.setText("IP "+ this.nodeData.getIPAdress()); agregar ip del server a la wallet, no se usara
+        this.lb_user.setText(this.nodeData.getNodeName());
+        this.lb_balance.setText(Integer.toString(this.dCurrentBalance));
+        this.startClient();   
+    }
+    
+    public boolean sendTensaction(){
+        String sNode=this.nodeData.getNodeName();
+        String sReceiver = this.txt_recibe.getText().trim().toUpperCase();
+        int dAmount = Integer.parseInt(this.jSpinner1.getValue().toString());
+        
+        //variable iServer es para seleccionar el servidor al que se le va a enviar
+        if(dAmount<=this.dCurrentBalance){
+            this.dCurrentBalance-=dAmount;
+            
+            try{
+                sNode = this.oCifrado.encriptar(sNode);
+                sReceiver = this.oCifrado.encriptar(sReceiver);
+
+                Block bkl = new Block();
+                bkl.setTransaction(sNode, dAmount, sReceiver);
+
+                Socket socket = new Socket("127.0.0.1", 8000);
+                ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+                oos.writeObject(bkl);
+                socket.close();
+                
+                this.lb_balance.setText(Integer.toString(this.dCurrentBalance));
+                return true;
+            }        
+            catch(Exception ee){
+                this.dCurrentBalance+=dAmount;
+            }       
+        }
+        else this.lb_estado.setText("Cantidad insuficiente");
+        return false;
     }
 
     /**
@@ -34,7 +94,7 @@ public class wallet extends javax.swing.JFrame /*implements Runnable*/{
         jLabel3 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
+        lb_user = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         lb_balance = new javax.swing.JLabel();
@@ -44,6 +104,7 @@ public class wallet extends javax.swing.JFrame /*implements Runnable*/{
         txt_recibe = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         jSpinner1 = new javax.swing.JSpinner();
+        lb_estado = new javax.swing.JLabel();
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
@@ -60,9 +121,9 @@ public class wallet extends javax.swing.JFrame /*implements Runnable*/{
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/parcial03/imagenes/mujer.png"))); // NOI18N
         jLabel4.setText("img");
 
-        jLabel5.setBackground(new java.awt.Color(255, 204, 204));
-        jLabel5.setFont(new java.awt.Font("Meow Paw", 0, 14)); // NOI18N
-        jLabel5.setText("jLabel5");
+        lb_user.setBackground(new java.awt.Color(255, 204, 204));
+        lb_user.setFont(new java.awt.Font("Meow Paw", 0, 14)); // NOI18N
+        lb_user.setText("jLabel5");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -72,14 +133,14 @@ public class wallet extends javax.swing.JFrame /*implements Runnable*/{
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lb_user, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(jLabel4)
-                .addComponent(jLabel5))
+                .addComponent(lb_user))
         );
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -97,7 +158,7 @@ public class wallet extends javax.swing.JFrame /*implements Runnable*/{
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lb_balance, javax.swing.GroupLayout.DEFAULT_SIZE, 48, Short.MAX_VALUE)
+                .addComponent(lb_balance, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(29, 29, 29))
@@ -129,11 +190,15 @@ public class wallet extends javax.swing.JFrame /*implements Runnable*/{
 
         jLabel7.setText("Cuantos gatitos quieres enviarle?");
 
+        lb_estado.setText("*");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(42, 42, 42)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -146,14 +211,16 @@ public class wallet extends javax.swing.JFrame /*implements Runnable*/{
                             .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(28, 28, 28)
-                        .addComponent(btn_enviar, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
                         .addGap(68, 68, 68)
                         .addComponent(txt_recibe, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(118, 118, 118)
-                        .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(28, 28, 28)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btn_enviar, javax.swing.GroupLayout.DEFAULT_SIZE, 214, Short.MAX_VALUE)
+                            .addComponent(lb_estado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
@@ -172,9 +239,11 @@ public class wallet extends javax.swing.JFrame /*implements Runnable*/{
                 .addComponent(jLabel7)
                 .addGap(18, 18, 18)
                 .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(29, 29, 29)
-                .addComponent(btn_enviar, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btn_enviar, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lb_estado)
+                .addGap(1, 1, 1)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -184,24 +253,15 @@ public class wallet extends javax.swing.JFrame /*implements Runnable*/{
 
     private void btn_enviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_enviarActionPerformed
         // TODO add your handling code here:
-        
+        this.sendTensaction();
+        this.txt_recibe.setText("");
+        this.jSpinner1.setValue(0);
+        /*
         int iComplexity = 3;
         String sSender;//falta
         String sReceiver = this.txt_recibe.getText().trim().toUpperCase();
         int dAmount= (Integer)jSpinner1.getValue();
-        
-        /*esto fue tomado del form hasging al dar en generar
-
-        Object algorithms[]=Security.getAlgorithms("MessageDigest").toArray(); 
-        this.bc = new BlockChain(iComplexity,"0","SHA-512/256");
-        this.bc.createGenesis();
-        bc.createBlock();
-        bc.getLastBlock().setTransaccion(sSender,dAmount,sReceiver), 
-        bc.mineBlock();
-        
-        int dBalance = this.getBalance(sClient);
-        this.lb_balance.setText(Int.toString(dBalance);
-        Clase 9 Nov-para ver historial de transacciones
+       
         */
     }//GEN-LAST:event_btn_enviarActionPerformed
 
@@ -245,7 +305,6 @@ public class wallet extends javax.swing.JFrame /*implements Runnable*/{
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
@@ -255,6 +314,43 @@ public class wallet extends javax.swing.JFrame /*implements Runnable*/{
     private javax.swing.JSpinner jSpinner1;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JLabel lb_balance;
+    private javax.swing.JLabel lb_estado;
+    private javax.swing.JLabel lb_user;
     private javax.swing.JTextField txt_recibe;
     // End of variables declaration//GEN-END:variables
+
+    public void run(){
+       while (true){
+           try{
+               Socket socket = this.clientSocket.accept();
+               
+               //Deserializacion
+                InputStream is = socket.getInputStream();
+                ObjectInputStream ois = new ObjectInputStream(is);
+                this.dCurrentBalance+=(Integer)ois.readObject();
+                this.lb_balance.setText(Integer.toString(this.dCurrentBalance));
+                socket.close();
+           }
+           catch(Exception ee){}
+       } 
+    }
+    
+    private void startClient(){
+        //inicializar listener
+        try{
+            // creo que la IpAdress puede ponerse fijo al ser un solo servidor
+           InetAddress iAddress= InetAddress.getByName(this.nodeData.getIPAdress());
+           InetSocketAddress sNetSocket = new InetSocketAddress("127.0.0.1",8000);
+//           InetSocketAddress sNetSocket = new InetSocketAddress(iAddress,this.nodeData.getSocketNum());
+           this.clientSocket = new ServerSocket();
+           this.clientSocket .bind(sNetSocket);
+           tListener=new Thread(this);
+           tListener.start();
+
+        }
+        catch(Exception ee){
+//            this.jLabel.setText(ee.toString());
+        }
+    }
+
 }

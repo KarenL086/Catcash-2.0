@@ -52,7 +52,7 @@ public class BlockChain {
         return this.blockChain.size();
     }
     
-    public boolean createGenesis(double pInitialBalance, String pClient)
+    public boolean createGenesis(int pInitialBalance, String pClient)
     {
         if(this.size()<1)
         {

@@ -16,10 +16,10 @@ private int id;
 private long timeStamp;
 private String sender;
 private String receiver;
-private double amount;
+private int amount;
 // receiber se menatiene como sender y amount como voto, receiver creo se elimina
 
-public Transaccion(int pId, String pSender, String pReceiver, double pAmount)
+public Transaccion(int pId, String pSender, String pReceiver, int pAmount)
 {
     this.id=pId;
     this.timeStamp= new Date().getTime();
@@ -62,7 +62,7 @@ public Transaccion(int pId, String pSender, String pReceiver, double pAmount)
     /**
      * @return the amount
      */
-    public double getAmount() {
+    public int getAmount() {
         return amount;
     } 
 }

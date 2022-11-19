@@ -8,6 +8,6 @@ package parcial03;
  *
  * @author Usuario
  */
-public class SHA256 {
+public class Cifrado {
     
 }
