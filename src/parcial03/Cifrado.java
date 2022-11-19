@@ -67,6 +67,8 @@ public class Cifrado {
             byte[] aBytes= pCadena.getBytes("UTF-8");
             byte[] aBytesDec= this.oDescifrado.doFinal(aBytes);
             String datos = new String(aBytesDec);
+            
+            return datos;
         }
  
 }
