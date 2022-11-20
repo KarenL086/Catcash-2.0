@@ -169,7 +169,7 @@
               <Color blue="0" green="0" red="66" type="rgb"/>
             </Property>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/parcial03/formularios/perro (1).png"/>
+              <Image iconType="3" name="/parcial03/imagenes/perro (1).png"/>
             </Property>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.SoftBevelBorderInfo">

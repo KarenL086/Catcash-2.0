@@ -132,7 +132,7 @@ public class Server extends javax.swing.JFrame implements Runnable{
         jLabel2.setText("gatitos iniciales:");
 
         agregar_usuario.setBackground(new java.awt.Color(102, 0, 0));
-        agregar_usuario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/parcial03/formularios/perro (1).png"))); // NOI18N
+        agregar_usuario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/parcial03/imagenes/perro (1).png"))); // NOI18N
         agregar_usuario.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.white, java.awt.Color.white, java.awt.Color.white, java.awt.Color.white));
         agregar_usuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
