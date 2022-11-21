@@ -37,9 +37,10 @@ public class Server extends javax.swing.JFrame implements Runnable{
         initComponents();
     }
 
+    //Esto no es posible porque es el de inicio, poner datos de NodeData desde el inicio? ya que no recibe del frmMundo
     public Server(NodeData pnodeData){
     initComponents();
-//    this.oCifrado = new Cifrado("ñVbFg-+*DsHgñ");
+    this.oCifrado = new Cifrado("ñVbFg-+*DsHgñ");
     this.currentNode=pnodeData;
     this.startServer();
     
@@ -89,7 +90,7 @@ public class Server extends javax.swing.JFrame implements Runnable{
         for(int i=0; i<this.aClients.size();i++){
             sCad+= this.aClients.get(i).getNodeName() +
                     "= $ "+
-                    Double.toString(this.bc.getBalance(this.aClients.get(i).getNodeName()))
+                    Integrer.toString(this.bc.getBalance(this.aClients.get(i).getNodeName()))
                     + "\n";
         }
         this.txtMessages.setText(sCad);
