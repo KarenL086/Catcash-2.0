@@ -26,9 +26,9 @@ public class Server extends javax.swing.JFrame implements Runnable{
     
     private Thread tListener;
    private NodeData currentNode;
-   private ArrayList<NodeData> aOtherServer;
+//   private ArrayList<NodeData> aOtherServer;
    private ArrayList<NodeData> aClients;
-   private ArrayList<wallet> frmWallet;
+//   private ArrayList<wallet> frmWallet;
     private ServerSocket SvrSocket;
     private BlockChain bc;
     private Cifrado oCifrado;
@@ -46,7 +46,7 @@ public class Server extends javax.swing.JFrame implements Runnable{
 //    this.jLabel.setText(this.currentNode.getNodeName()); creo que esto no
 //    this.aOtherServers=new ArrayList<>();
     this.aClients=new ArrayList<>();
-    this.frmWallet=new ArrayList<>();  
+//    this.frmWallet=new ArrayList<>();  
     }
 
 
@@ -84,6 +84,22 @@ public class Server extends javax.swing.JFrame implements Runnable{
             }
         }
     }
+    public void listBalances(){
+        String sCad="";
+        for(int i=0; i<this.aClients.size();i++){
+            sCad+= this.aClients.get(i).getNodeName() +
+                    "= $ "+
+                    Double.toString(this.bc.getBalance(this.aClients.get(i).getNodeName()))
+                    + "\n";
+        }
+        this.txtMessages.setText(sCad);
+    }
+    
+//    Esto es por si se usa el broadcast
+//    public void registerClients(ArrayList<NodeData> aNClients){
+//        this.aClients=aNClients;
+//        this.listBalances();
+//    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -228,7 +244,7 @@ public class Server extends javax.swing.JFrame implements Runnable{
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap(13, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
@@ -258,12 +274,7 @@ public class Server extends javax.swing.JFrame implements Runnable{
 
     private void agregar_usuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_agregar_usuarioActionPerformed
         // TODO add your handling code here:
-        /*
-        este es el codigo para agregar servidores, preg si se usara
-        NodeData tNode=new NodeData ("SV","127.0.0.1","7000");
-        this.aServers.add(tNode);
-        ... clase nov 9 consenso min 1:01:58
-        */
+        
 
     }//GEN-LAST:event_agregar_usuarioActionPerformed
 
@@ -323,6 +334,7 @@ public class Server extends javax.swing.JFrame implements Runnable{
     private javax.swing.JTextField txt_nUsuario;
     // End of variables declaration//GEN-END:variables
 
+    @Override
     public void run(){
         while(true){
             try{

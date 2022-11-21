@@ -146,8 +146,6 @@ public class wallet extends javax.swing.JFrame implements Runnable{
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel1.setText("Gatitos disponibles:");
 
-        lb_balance.setText("jLabel2");
-
         jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/parcial03/imagenes/gato(2).png"))); // NOI18N
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -319,6 +317,7 @@ public class wallet extends javax.swing.JFrame implements Runnable{
     private javax.swing.JTextField txt_recibe;
     // End of variables declaration//GEN-END:variables
 
+    @Override
     public void run(){
        while (true){
            try{
