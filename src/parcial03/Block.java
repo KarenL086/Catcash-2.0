@@ -10,16 +10,23 @@ import java.util.Date;
  *
  * @author Usuario
  */
+// Se implementa una clase serializable para que pueda ser transmitida una 
+// clase p2p, sin eso no se puede transmitir sobre la web
 public class Block implements Serializable{
+    
+    //Definición de variables y arreglos
     private int id;
     private int nonce;
     private long timeStamp;
-    private String hash;
+    private String hash;  //root hash
     private String hashPrevio;
     private ArrayList<Transaccion> aTransaccion;
     
+    
+    //Método constructor
     public Block(int pId, String pHashPrev){
         this.id = pId;
+        //Marca temporal
         this.timeStamp = new Date().getTime();
         this.hashPrevio=pHashPrev;
         this.aTransaccion= new ArrayList<>();
@@ -27,6 +34,9 @@ public class Block implements Serializable{
         this.hash=null;
     }
     
+    //Constructor vacío 
+    // Sirve para crear el bloque genesis
+    //Ya que el bloque genesis no tiene hash previo
     public Block() {
         this.timeStamp = new Date().getTime();
         this.aTransaccion= new ArrayList<>();
@@ -34,6 +44,7 @@ public class Block implements Serializable{
         this.hash=null;
         this.id = -1;
     }
+    
     public boolean register(int pNonce, String pHash)
     {
         if ((this.getId()>-1)&&(this.getNonce()<0)&&(this.getHash()==null))
@@ -103,13 +114,16 @@ public class Block implements Serializable{
     }
 
     @Override
+    //Es una cadena donde se toma información del bloque y se convierte a String
     public String toString(){
         String sCad=Integer.toString(id)+ Long.toString(timeStamp) + this.hashPrevio;
         
+        //Recorre todas las transacciones y se toma
+        //el valor de cada transaccion
         for(int i=0; i<this.aTransaccion.size(); i++)
         {
         sCad= sCad + this.aTransaccion.get(i).toString();
         }
-        return sCad;
+        return sCad; //Se obtiene una sola cadena
     }  
 }

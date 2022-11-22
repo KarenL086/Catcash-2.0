@@ -10,12 +10,19 @@ import java.util.Date;
  *
  * @author Usuario
  */
+// Ya que el bloque es serializable también 
+// sus "ramas" deben serlo
 public class Transaccion implements Serializable{
+//Definición de variables 
     
+
 private int id;
 private long timeStamp;
+//Persona que envía:
 private String sender;
+//Persona que recibe:
 private String receiver;
+//Amount es la cantidad de dinero que envía
 private int amount;
 // receiber se menatiene como sender y amount como voto, receiver creo se elimina
 
@@ -29,6 +36,7 @@ public Transaccion(int pId, String pSender, String pReceiver, int pAmount)
 }
 @Override
     public String toString() {
+        //Realiza una conversión de datos a Strings en una sola cadena
     return Integer.toString(getId())+Long.toString(getTimeStamp())+getSender()+getReceiver()+Double.toString(getAmount());
     }
      /**
