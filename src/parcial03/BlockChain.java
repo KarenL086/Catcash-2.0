@@ -12,11 +12,14 @@ import java.util.List;
  */
 public class BlockChain {
 
+    // Definición de variables
     private ArrayList<Block> blockChain;
     private int complexity;
+    //Variable de prueba
     private String proofOfWork;
     private String hashMethod;
     
+    //Método constructor
     public BlockChain(int iComplexity, String proofChar, String HashMethod){
         this.blockChain = new ArrayList<>();
         this.complexity=iComplexity;
@@ -87,18 +90,29 @@ public class BlockChain {
     
     public double getBalance(String pSender)
     {
+        //Cantidad positiva de cada user:
+        //(Ingreso)
         double positiveAmount=0;
+        //Cantidad de dinero que concede:
+        //(Egreso)
         double negativeAmount=0;
+        
+        //Es un iterador que verifica los ingresos o egresos dependiendo del usuario 
         for(int i=0; i<this.size(); i++)
         {
             for(int j=0; j<this.getBlock(i).countTransactions(); j++)
             {
+                // Realiza una comparación de la cadena de bloques del receptor con el emisor
                 if (this.getBlock(i).getTransaction(j).getReceiver().equals(pSender))
+                    //Si se confirma la comparación lo agrega a los ingresos
                 positiveAmount+= this.getBlock(i).getTransaction(j).getAmount();
+                //Vuelve a comparar ahora los bloques del emisor con los del receptor
                 else if (this.getBlock(i).getTransaction(j).getSender().equals(pSender))
+                    //Si se confirma lo guarda en los egresos
                 negativeAmount+= this.getBlock(i).getTransaction(j).getAmount();
             }
         }
+        //Luego hace una resta para poder calcular el balance total de ambos usuarios
         return positiveAmount-negativeAmount;
     }
     
@@ -125,13 +139,15 @@ public class BlockChain {
         return false;
     }
     
-    public void mineBlock()
+    public void mineBlock() //Minado
     {
+       
         String cad= this.blockChain.get(this.blockChain.size()-1).toString();
         int nonce=0;
         String sHash="";
         while(true)
         {
+            //Genera el hash
             sHash=this.generateHash(cad+Integer.toString(nonce));
             if (sHash.subSequence(0, complexity).equals(this.proofOfWork))
             {

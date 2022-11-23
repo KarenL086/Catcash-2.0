@@ -58,6 +58,8 @@ public class Block implements Serializable{
     
     public void setTransaction(String pSender, int pAmount, String pReceiver)
     {
+        //Es un arraylist de transacciones y a este se le 
+        //agrega un nuevo objeto de transacciones
         this.aTransaccion.add(new Transaccion(
         this.aTransaccion.size(),pSender,pReceiver,pAmount));
     }
